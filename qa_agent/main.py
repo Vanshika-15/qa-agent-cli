@@ -5,6 +5,7 @@ from qa_agent.agents.test_case_generator import run_generate
 from qa_agent.agents.pr_analyzer import run_analyze
 from qa_agent.agents.ambiguity_checker import run_ambiguity_check
 from qa_agent.agents.bug_reporter import run_bug_report
+from qa_agent.agents.prioritizer import run_prioritize
 
 
 app = typer.Typer()
@@ -61,6 +62,18 @@ def bug_report(description: str):
     """Turn a rough bug description into a properly structured bug report."""
     try:
         run_bug_report(description, console)
+    except Exception:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def prioritize(
+    test_cases: str = typer.Argument(..., help="Test cases to prioritize (paste a list, comma or newline separated)."),
+    context: str = typer.Option(None, "--context", help="Optional context, e.g. 'only 2 hours before release'."),
+):
+    """Rank test cases by priority when there isn't time to run everything."""
+    try:
+        run_prioritize(test_cases, context, console)
     except Exception:
         raise typer.Exit(code=1)
 

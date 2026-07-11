@@ -81,3 +81,23 @@ class BugReport(BaseModel):
     possible_root_cause: str = Field(
         description="A brief, informed guess at what might be causing this, useful context for the dev team. Say 'Unclear from description' if there isn't enough info."
     )
+
+
+class PrioritizedTest(BaseModel):
+    """A single test case with its assigned priority."""
+
+    test_case: str = Field(description="The test case description")
+    priority: str = Field(description="Priority: P0 (must run), P1 (should run), or P2 (nice to have)")
+    reasoning: str = Field(description="Brief reason for this priority level")
+
+
+class PrioritizationResult(BaseModel):
+    """A ranked list of test cases by risk/importance."""
+
+    prioritized_tests: list[PrioritizedTest] = Field(
+        description="Test cases ranked from highest to lowest priority"
+    )
+
+    recommended_minimum: list[str] = Field(
+        description="If time only allows a handful of tests, exactly which ones should run (by test_case text)"
+    )
