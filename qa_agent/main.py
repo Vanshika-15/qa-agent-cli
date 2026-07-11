@@ -43,6 +43,9 @@ def analyze(
     base: str = typer.Option(
         None, "--base", help="Branch to diff against (e.g. main). Omit to diff uncommitted changes."
     ),
+    save: str = typer.Option(
+        None, "--save", help="Save the report to a markdown file (provide a filename, e.g. report.md)."
+    ),
 ):
     """Analyze a PR description, requirement, or git diff and produce a structured QA report."""
 
@@ -92,6 +95,30 @@ PR/Requirement description or diff:
     console.print("[bold underline]Smoke Tests to Run[/bold underline]")
     for item in result.smoke_tests:
         console.print(f"  • {item}")
+
+    if save:
+        report_md = f"""# QA Analysis Report
+
+## Summary
+{result.summary}
+
+**Risk Level:** {result.risk_level}
+
+## What to Verify
+{chr(10).join(f"- {item}" for item in result.what_to_verify)}
+
+## APIs / Services Changed
+{chr(10).join(f"- {item}" for item in result.apis_changed) if result.apis_changed else "_(none identified)_"}
+
+## Regression Risk Areas
+{chr(10).join(f"- {item}" for item in result.regression_risk_areas)}
+
+## Smoke Tests to Run
+{chr(10).join(f"- {item}" for item in result.smoke_tests)}
+"""
+        with open(save, "w") as f:
+            f.write(report_md)
+        console.print(f"\n[bold green]✓ Report saved to {save}[/bold green]")
 
 
 if __name__ == "__main__":
