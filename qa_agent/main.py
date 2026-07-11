@@ -28,7 +28,16 @@ and edge cases. Format as a numbered markdown list with clear titles.
 Requirement: {requirement}
 """
 
-    result = ask_gemini(prompt)
+    try:
+        result = ask_gemini(prompt)
+    except ValueError as e:
+        console.print(f"[bold red]✗ Configuration error:[/bold red] {e}")
+        raise typer.Exit(code=1)
+    except Exception as e:
+        console.print(f"[bold red]✗ Could not reach Gemini:[/bold red] {e}")
+        console.print("[dim]Check your internet connection and API key in .env[/dim]")
+        raise typer.Exit(code=1)
+
     console.print(Markdown(result))
 
 
@@ -51,9 +60,16 @@ def analyze(
 
     if from_git:
         console.print("[bold cyan]Reading git diff...[/bold cyan]")
-        description = get_diff(base)
+        try:
+            description = get_diff(base)
+        except ValueError as e:
+            console.print(f"[bold red]✗ {e}[/bold red]")
+            raise typer.Exit(code=1)
+        except RuntimeError as e:
+            console.print(f"[bold red]✗ Git error:[/bold red] {e}")
+            raise typer.Exit(code=1)
     elif not description:
-        console.print("[bold red]Error:[/bold red] Provide a description, or use --from-git.")
+        console.print("[bold red]✗ Error:[/bold red] Provide a description, or use --from-git.")
         raise typer.Exit(code=1)
 
     console.print("[bold cyan]Analyzing...[/bold cyan]\n")
@@ -69,7 +85,15 @@ PR/Requirement description or diff:
 {description}
 """
 
-    result: QAAnalysis = ask_gemini_structured(prompt, QAAnalysis)
+    try:
+        result: QAAnalysis = ask_gemini_structured(prompt, QAAnalysis)
+    except ValueError as e:
+        console.print(f"[bold red]✗ Configuration error:[/bold red] {e}")
+        raise typer.Exit(code=1)
+    except Exception as e:
+        console.print(f"[bold red]✗ Could not reach Gemini:[/bold red] {e}")
+        console.print("[dim]Check your internet connection and API key in .env[/dim]")
+        raise typer.Exit(code=1)
 
     console.print(f"[bold]Summary:[/bold] {result.summary}\n")
     console.print(f"[bold]Risk Level:[/bold] {result.risk_level}\n")
@@ -116,9 +140,13 @@ PR/Requirement description or diff:
 ## Smoke Tests to Run
 {chr(10).join(f"- {item}" for item in result.smoke_tests)}
 """
-        with open(save, "w") as f:
-            f.write(report_md)
-        console.print(f"\n[bold green]✓ Report saved to {save}[/bold green]")
+        try:
+            with open(save, "w") as f:
+                f.write(report_md)
+            console.print(f"\n[bold green]✓ Report saved to {save}[/bold green]")
+        except OSError as e:
+            console.print(f"\n[bold red]✗ Could not save report:[/bold red] {e}")
+            raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
