@@ -25,3 +25,27 @@ class QAAnalysis(BaseModel):
     risk_level: str = Field(
         description="Overall risk level: Low, Medium, or High"
     )
+
+
+class AmbiguityCheck(BaseModel):
+    """Structured analysis of ambiguity/gaps in a requirement."""
+
+    clarity_score: str = Field(
+        description="Overall clarity rating: Clear, Mostly Clear, or Ambiguous"
+    )
+
+    ambiguous_points: list[str] = Field(
+        description="Specific phrases or statements that are vague, unclear, or open to interpretation"
+    )
+
+    missing_details: list[str] = Field(
+        description="Important details that seem to be missing entirely (e.g. error handling, limits, permissions)"
+    )
+
+    clarifying_questions: list[str] = Field(
+        description="Specific questions a QA engineer or BA should ask the requirement author before development starts"
+    )
+
+    assumptions_if_unclarified: list[str] = Field(
+        description="Reasonable assumptions a developer might make if these ambiguities aren't resolved, which could lead to bugs"
+    )

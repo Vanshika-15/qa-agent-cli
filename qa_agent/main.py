@@ -3,6 +3,7 @@ from rich.console import Console
 
 from qa_agent.agents.test_case_generator import run_generate
 from qa_agent.agents.pr_analyzer import run_analyze
+from qa_agent.agents.ambiguity_checker import run_ambiguity_check
 
 app = typer.Typer()
 console = Console()
@@ -44,6 +45,13 @@ def analyze(
     except Exception:
         raise typer.Exit(code=1)
 
+@app.command()
+def ambiguity_check(requirement: str):
+    """Check a requirement for ambiguity and missing details before development starts."""
+    try:
+        run_ambiguity_check(requirement, console)
+    except Exception:
+        raise typer.Exit(code=1)
 
 if __name__ == "__main__":
     app()
