@@ -12,7 +12,7 @@ console = Console()
 
 @app.command()
 def hello(name: str = "QA Engineer"):
-    """Say hello to someone."""
+    """Say hello to someone by name."""
     print(f"Hello, {name}! Welcome to QA Agent CLI.")
 
 
