@@ -49,3 +49,35 @@ class AmbiguityCheck(BaseModel):
     assumptions_if_unclarified: list[str] = Field(
         description="Reasonable assumptions a developer might make if these ambiguities aren't resolved, which could lead to bugs"
     )
+
+
+class BugReport(BaseModel):
+    """Structured bug report generated from a rough description."""
+
+    title: str = Field(
+        description="Concise, specific bug title suitable for a ticket (e.g. 'Login fails silently when password contains emoji')"
+    )
+
+    severity: str = Field(
+        description="Severity: Critical, High, Medium, or Low"
+    )
+
+    steps_to_reproduce: list[str] = Field(
+        description="Numbered, specific steps to reproduce the issue. Make reasonable inferences from the description; note any assumptions."
+    )
+
+    expected_result: str = Field(
+        description="What should happen"
+    )
+
+    actual_result: str = Field(
+        description="What actually happens, based on the description given"
+    )
+
+    environment_notes: list[str] = Field(
+        description="Environment details that would be useful to capture (browser, OS, device, account type, etc.) — even if not specified, list what SHOULD be captured"
+    )
+
+    possible_root_cause: str = Field(
+        description="A brief, informed guess at what might be causing this, useful context for the dev team. Say 'Unclear from description' if there isn't enough info."
+    )

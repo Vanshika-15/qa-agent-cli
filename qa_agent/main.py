@@ -4,6 +4,8 @@ from rich.console import Console
 from qa_agent.agents.test_case_generator import run_generate
 from qa_agent.agents.pr_analyzer import run_analyze
 from qa_agent.agents.ambiguity_checker import run_ambiguity_check
+from qa_agent.agents.bug_reporter import run_bug_report
+
 
 app = typer.Typer()
 console = Console()
@@ -52,6 +54,16 @@ def ambiguity_check(requirement: str):
         run_ambiguity_check(requirement, console)
     except Exception:
         raise typer.Exit(code=1)
+
+
+@app.command()
+def bug_report(description: str):
+    """Turn a rough bug description into a properly structured bug report."""
+    try:
+        run_bug_report(description, console)
+    except Exception:
+        raise typer.Exit(code=1)
+
 
 if __name__ == "__main__":
     app()
