@@ -31,3 +31,15 @@ def read_test_files(directory: str, extensions: list[str] = None) -> str:
         raise ValueError(f"No test files found in {directory} (looked for: {', '.join(extensions)})")
 
     return "\n\n".join(files_content)
+
+def read_spec_file(file_path: str) -> str:
+    """Read an API spec file (OpenAPI/Swagger, JSON or YAML) as text."""
+    path = Path(file_path)
+
+    if not path.exists():
+        raise ValueError(f"Spec file not found: {file_path}")
+
+    try:
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        raise ValueError(f"Could not read {file_path} as text — is it a valid JSON/YAML file?")

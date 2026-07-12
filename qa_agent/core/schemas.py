@@ -121,3 +121,23 @@ class CoverageGap(BaseModel):
     coverage_estimate: str = Field(
         description="Rough overall coverage assessment: e.g. 'Well covered', 'Partially covered', 'Largely untested'"
     )
+
+class APITestCase(BaseModel):
+    """A single API test case."""
+
+    endpoint: str = Field(description="The endpoint and method, e.g. 'POST /users/login'")
+    scenario: str = Field(description="What this test verifies")
+    expected_status: str = Field(description="Expected HTTP status code, e.g. '200', '400', '401'")
+    notes: str = Field(description="Any important details: required headers, payload shape, auth needs, etc.")
+
+
+class APITestSuite(BaseModel):
+    """A set of API test cases generated from a spec."""
+
+    test_cases: list[APITestCase] = Field(
+        description="API test cases covering positive, negative, auth, and validation scenarios"
+    )
+
+    untested_risk_areas: list[str] = Field(
+        description="Notable risk areas in the spec that deserve extra attention (e.g. endpoints handling sensitive data, missing rate limiting, etc.)"
+    )
