@@ -8,6 +8,7 @@ from qa_agent.agents.bug_reporter import run_bug_report
 from qa_agent.agents.prioritizer import run_prioritize
 from qa_agent.agents.coverage_checker import run_coverage_gap
 from qa_agent.agents.api_spec_analyzer import run_api_spec
+from qa_agent.agents.regression_analyzer import run_regression_impact
 
 app = typer.Typer()
 console = Console()
@@ -97,6 +98,17 @@ def api_spec(
     """Generate API test cases from an OpenAPI/Swagger spec file."""
     try:
         run_api_spec(spec_path, console)
+    except Exception:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def regression_impact(
+    base: str = typer.Option(None, "--base", help="Branch to diff against (e.g. main). Omit to diff uncommitted changes."),
+):
+    """Analyze code changes AND their dependents to assess real regression impact."""
+    try:
+        run_regression_impact(base, console)
     except Exception:
         raise typer.Exit(code=1)
 

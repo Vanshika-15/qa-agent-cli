@@ -31,7 +31,7 @@ def ask_gemini(prompt: str) -> str:
 def ask_gemini_structured(prompt: str, schema):
     """
     Send a prompt to Gemini and get back a response matching the given
-    Pydantic schema, instead of free-form text.
+    Pydantic schema, instead of free-form text data.
     """
     client = get_client()
     response = client.models.generate_content(

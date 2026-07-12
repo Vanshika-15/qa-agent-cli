@@ -141,3 +141,22 @@ class APITestSuite(BaseModel):
     untested_risk_areas: list[str] = Field(
         description="Notable risk areas in the spec that deserve extra attention (e.g. endpoints handling sensitive data, missing rate limiting, etc.)"
     )
+
+class RegressionImpact(BaseModel):
+    """Analysis of downstream regression impact from code changes."""
+
+    summary: str = Field(description="One or two sentence summary of the change's overall impact")
+
+    directly_changed_areas: list[str] = Field(
+        description="Features/functionality directly affected by the changed files themselves"
+    )
+
+    downstream_impact: list[str] = Field(
+        description="Features/functionality that could break due to dependent files, even though not directly edited"
+    )
+
+    regression_test_scope: list[str] = Field(
+        description="Specific test cases/areas that should be run to catch regressions from this change, prioritized by risk"
+    )
+
+    risk_level: str = Field(description="Overall regression risk: Low, Medium, or High")
