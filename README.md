@@ -103,6 +103,8 @@ See [`examples/sample_report.md`](examples/sample_report.md) for a real generate
 - **python-dotenv** — configuration
 
 ## Architecture
+
+```text
 qa_agent/
 ├── main.py              # CLI command wiring (thin layer)
 ├── agents/               # One file per AI agent — the actual QA logic
@@ -116,12 +118,15 @@ qa_agent/
 │   ├── regression_analyzer.py
 │   └── root_cause_analyzer.py
 └── core/                 # Shared infrastructure
-├── ai_client.py       # Gemini API wrapper
-├── schemas.py          # Pydantic output schemas
-├── git_utils.py        # Git diff/changed-files helpers
-├── file_utils.py        # Test/spec file reading
-├── dependency_scanner.py # Codebase dependency detection
-└── code_search.py        # Error-to-code matching
+    ├── ai_client.py       # Gemini API wrapper
+    ├── schemas.py          # Pydantic output schemas
+    ├── git_utils.py        # Git diff/changed-files helpers
+    ├── file_utils.py        # Test/spec file reading
+    ├── dependency_scanner.py # Codebase dependency detection
+    └── code_search.py        # Error-to-code matching
+```
+
+New agents follow a consistent pattern: define a Pydantic schema → write a prompt → wire a CLI command. This makes the codebase easy to extend with new agents.
 
 
 New agents follow a consistent pattern: define a Pydantic schema → write a prompt → wire a CLI command. This makes the codebase easy to extend with new agents.
