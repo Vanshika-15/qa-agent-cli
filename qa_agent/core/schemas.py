@@ -160,3 +160,27 @@ class RegressionImpact(BaseModel):
     )
 
     risk_level: str = Field(description="Overall regression risk: Low, Medium, or High")
+    
+
+class RootCauseAnalysis(BaseModel):
+    """Analysis of the likely root cause of a bug, error, or test failure."""
+
+    likely_causes: list[str] = Field(
+        description="Most probable root causes, ranked from most to least likely, grounded in the actual code where possible"
+    )
+
+    affected_code_areas: list[str] = Field(
+        description="Specific functions, files, or lines that are likely involved"
+    )
+
+    debugging_steps: list[str] = Field(
+        description="Concrete next steps to confirm the root cause (e.g. what to log, what to check, what to reproduce)"
+    )
+
+    confidence: str = Field(
+        description="Confidence in this diagnosis: High, Medium, or Low — Low if the error text/code alone isn't enough to be sure"
+    )
+
+    related_test_gaps: list[str] = Field(
+        description="If this bug reveals a testing gap, what test(s) would have caught it earlier"
+    )

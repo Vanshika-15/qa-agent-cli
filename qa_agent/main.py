@@ -9,6 +9,9 @@ from qa_agent.agents.prioritizer import run_prioritize
 from qa_agent.agents.coverage_checker import run_coverage_gap
 from qa_agent.agents.api_spec_analyzer import run_api_spec
 from qa_agent.agents.regression_analyzer import run_regression_impact
+from qa_agent.agents.root_cause_analyzer import run_root_cause
+
+
 
 app = typer.Typer()
 console = Console()
@@ -109,6 +112,14 @@ def regression_impact(
     """Analyze code changes AND their dependents to assess real regression impact."""
     try:
         run_regression_impact(base, console)
+    except Exception:
+        raise typer.Exit(code=1)
+
+@app.command()
+def root_cause(error_text: str):
+    """Analyze an error, stack trace, or bug description and hypothesize root causes."""
+    try:
+        run_root_cause(error_text, console)
     except Exception:
         raise typer.Exit(code=1)
 
