@@ -6,7 +6,7 @@ from qa_agent.agents.pr_analyzer import run_analyze
 from qa_agent.agents.ambiguity_checker import run_ambiguity_check
 from qa_agent.agents.bug_reporter import run_bug_report
 from qa_agent.agents.prioritizer import run_prioritize
-
+from qa_agent.agents.coverage_checker import run_coverage_gap
 
 app = typer.Typer()
 console = Console()
@@ -74,6 +74,18 @@ def prioritize(
     """Rank test cases by priority when there isn't time to run everything."""
     try:
         run_prioritize(test_cases, context, console)
+    except Exception:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def coverage_gap(
+    requirement: str = typer.Argument(..., help="The requirement to check coverage for."),
+    test_dir: str = typer.Option("tests", "--test-dir", help="Directory containing existing test files."),
+):
+    """Compare a requirement against your existing test suite to find gaps."""
+    try:
+        run_coverage_gap(requirement, test_dir, console)
     except Exception:
         raise typer.Exit(code=1)
 

@@ -101,3 +101,23 @@ class PrioritizationResult(BaseModel):
     recommended_minimum: list[str] = Field(
         description="If time only allows a handful of tests, exactly which ones should run (by test_case text)"
     )
+
+
+class CoverageGap(BaseModel):
+    """Analysis comparing a requirement against existing test coverage."""
+
+    already_covered: list[str] = Field(
+        description="Aspects of the requirement that appear to already be tested by the existing test files"
+    )
+
+    coverage_gaps: list[str] = Field(
+        description="Specific scenarios from the requirement that are NOT covered by existing tests"
+    )
+
+    suggested_new_tests: list[str] = Field(
+        description="New test cases to write to close the identified gaps, described specifically enough to act on"
+    )
+
+    coverage_estimate: str = Field(
+        description="Rough overall coverage assessment: e.g. 'Well covered', 'Partially covered', 'Largely untested'"
+    )
